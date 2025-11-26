@@ -11,8 +11,20 @@ public class UserHelper extends BaseHelper {
         super(driver);
     }
 
-    public void clickOnLoginLink() {
-        click(By.cssSelector("[href='/login']"));
+    public boolean isSignOutButtonPresent() {
+        return isElementPresent(By.xpath("//button[.='Sign Out']"));
+    }
+
+    public boolean isLoginLinkPresent() {
+        return isElementPresent(By.cssSelector("[href='/login']"));
+    }
+
+    public boolean isLoginErrorMessagePresent() {
+        return isElementPresent(By.cssSelector(".login_login__3EHKB>div"));
+    }
+
+    public boolean isErrorMessagePresent() {
+        return isLoginErrorMessagePresent();
     }
 
     public void fillLoginRegisterForm(User user) {
@@ -20,19 +32,25 @@ public class UserHelper extends BaseHelper {
         type(By.name("password"), user.getPassword());
     }
 
-    public void clickOnLoginButton() {
-        click(By.cssSelector("button[type='submit']"));
+    public void clickOnLoginLink() {
+        click(By.cssSelector("[href='/login']"));
     }
 
     public void clickOnRegistrationButton() {
-        click(By.cssSelector("button[type='submit']"));
+        click(By.name("registration"));
     }
 
-    public boolean isSignOutButtonPresent() {
-        return isElementPresent(By.xpath("//*[text()='Sign Out']"));
+    public void clickOnLoginButton() {
+        click(By.name("login"));
     }
 
-    public boolean isAlertPresent() {
-        return isElementPresent(By.cssSelector(".alert"));
+    public void clickOnSignOutButton() {
+        click(By.xpath("//button[.='Sign Out']"));
+    }
+
+    public void login(User user) {
+        clickOnLoginLink();
+        fillLoginRegisterForm(user);
+        clickOnLoginButton();
     }
 }

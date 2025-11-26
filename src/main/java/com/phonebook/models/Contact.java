@@ -2,6 +2,7 @@ package com.phonebook.models;
 
 public class Contact {
 
+
     private String name;
     private String lastName;
     private String phone;
@@ -37,6 +38,7 @@ public class Contact {
     public Contact setDescription(String description) {
         this.description = description;
         return this;
+
     }
 
     public String getName() {

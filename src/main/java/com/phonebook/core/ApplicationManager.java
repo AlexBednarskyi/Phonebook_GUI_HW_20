@@ -7,21 +7,42 @@ import com.phonebook.fw.UserHelper;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.safari.SafariDriver;
+import org.testng.asserts.SoftAssert;
 
 import java.time.Duration;
 
 public class ApplicationManager {
 
+    String browser;
     protected WebDriver driver;
+    public static SoftAssert softAssert;
 
-    private UserHelper user;
-    private ContactHelper contact;
-    private HomePageHelper homePage;
-    private ItemHelper item;
+    UserHelper user;
+    ContactHelper contact;
+    HomePageHelper homePage;
+    ItemHelper item;                 // ← поле для ItemHelper
+
+    public ApplicationManager(String browser) {
+        this.browser = browser;
+    }
 
     public void init() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
+
+        if (browser.equalsIgnoreCase("chrome")) {
+            WebDriverManager.chromedriver().setup();
+            driver = new ChromeDriver();
+
+        } else if (browser.equalsIgnoreCase("safari")) {
+            WebDriverManager.safaridriver().setup();
+            driver = new SafariDriver();
+
+        } else if (browser.equalsIgnoreCase("firefox")) {
+            WebDriverManager.firefoxdriver().setup();
+            driver = new FirefoxDriver();
+        }
+
         driver.get("https://telranedu.web.app/");
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -30,10 +51,8 @@ public class ApplicationManager {
         contact = new ContactHelper(driver);
         homePage = new HomePageHelper(driver);
         item = new ItemHelper(driver);
-    }
 
-    public void stop() {
-        driver.quit();
+        softAssert = new SoftAssert();
     }
 
     public UserHelper getUser() {
@@ -50,5 +69,11 @@ public class ApplicationManager {
 
     public ItemHelper getItem() {
         return item;
+    }
+
+    public void stop() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }

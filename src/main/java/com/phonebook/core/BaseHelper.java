@@ -12,13 +12,12 @@ public class BaseHelper {
 
     protected WebDriver driver;
 
-
     public BaseHelper(WebDriver driver) {
         this.driver = driver;
     }
 
-    public boolean isElementPresent(By locator){
-        return driver.findElements(locator).size()>0;
+    public boolean isElementPresent(By locator) {
+        return driver.findElements(locator).size() > 0;
     }
 
     public void click(By locator) {
@@ -26,7 +25,7 @@ public class BaseHelper {
     }
 
     public void type(By locator, String text) {
-        if(text!=null) {
+        if (text != null) {
             click(locator);
             driver.findElement(locator).clear();
             driver.findElement(locator).sendKeys(text);
@@ -34,12 +33,13 @@ public class BaseHelper {
     }
 
     public boolean isAlertPresent() {
-        Alert alert = new WebDriverWait(driver, Duration.ofSeconds(20))
-                .until(ExpectedConditions.alertIsPresent());
-        if (alert == null) {
-            return false;
-        } else {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+            alert.accept();
             return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -49,8 +49,5 @@ public class BaseHelper {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
     }
-
-
 }
